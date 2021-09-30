@@ -1,8 +1,10 @@
 require('dotenv').config();
 
 const { execSync } = require('child_process');
+const { networkInterfaces } = require('os');
 
 const fakeRequest = require('supertest');
+const { createBrotliCompress } = require('zlib');
 const app = require('../lib/app');
 const client = require('../lib/client');
 
@@ -93,6 +95,91 @@ describe('app routes', () => {
 
       const data = await fakeRequest(app)
         .get('/basketball-teams/1')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(expectation);
+    });
+
+    test('adds a new team', async () => {
+
+      const expectation =
+      {
+        id: expect.any(Number),
+        name: 'celtics',
+        city: 'boston',
+        logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png',
+        championships: 17,
+        category: 'eastern conference',
+        owner_id: 1
+      };
+
+
+      const data = await fakeRequest(app)
+        .post('/basketball-teams')
+        .send({
+          name: 'celtics',
+          city: 'boston',
+          logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png',
+          championships: 17,
+          category: 'eastern conference',
+        })
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(expectation);
+    });
+    test('updates a team data', async () => {
+
+      const expectation =
+      {
+        id: expect.any(Number),
+        name: 'celtics',
+        city: 'boston',
+        logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png',
+        championships: 17,
+        category: 'eastern conference',
+        owner_id: 1
+      };
+
+
+      const data = await fakeRequest(app)
+        .put('/basketball-teams/5')
+        .send({
+          name: 'celtics',
+          city: 'boston',
+          logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png',
+          championships: 17,
+          category: 'eastern conference',
+        })
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+      expect(data.body).toEqual(expectation);
+    });
+    test('deletes a team from data', async () => {
+
+      const expectation =
+      {
+        id: expect.any(Number),
+        name: 'celtics',
+        city: 'boston',
+        logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png',
+        championships: 17,
+        category: 'eastern conference',
+        owner_id: 1
+      };
+
+
+      const data = await fakeRequest(app)
+        .delete('/basketball-teams/5')
+        .send({
+          name: 'celtics',
+          city: 'boston',
+          logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8f/Boston_Celtics.svg/1200px-Boston_Celtics.svg.png',
+          championships: 17,
+          category: 'eastern conference',
+        })
         .expect('Content-Type', /json/)
         .expect(200);
 
