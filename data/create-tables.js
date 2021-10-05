@@ -17,15 +17,21 @@ async function run() {
                     email VARCHAR(256) NOT NULL,
                     hash VARCHAR(512) NOT NULL
                 );
+                CREATE TABLE categories (
+                  id SERIAL PRIMARY KEY NOT NULL,
+                  category_name VARCHAR(512) NOT NULL
+                );
+
                 CREATE TABLE ball_teams (
                     id SERIAL PRIMARY KEY NOT NULL,
                     name VARCHAR(512) NOT NULL,
                     city VARCHAR(512) NOT NULL,
                     logo VARCHAR(512) NOT NULL,
                     championships INTEGER NOT NULL,
-                    category VARCHAR(512) NOT NULL,
+                    category_id INTEGER NOT NULL REFERENCES categories(id),
                     owner_id INTEGER NOT NULL REFERENCES users(id)
             );
+
         `);
 
     console.log('create tables complete', getEmoji(), getEmoji(), getEmoji());

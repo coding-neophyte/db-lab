@@ -10,12 +10,14 @@ async function run() {
 
     await client.query(`
             DROP TABLE IF EXISTS users CASCADE;
+            DROP TABLE IF EXISTS categories CASCADE;
             DROP TABLE IF EXISTS ball_teams;
+
         `);
 
     console.log(' drop tables complete', getEmoji(), getEmoji(), getEmoji());
   }
-  catch(err) {
+  catch (err) {
     console.log(err);
   }
   finally {
